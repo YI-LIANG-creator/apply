@@ -110,7 +110,7 @@
             display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
             gap: 8px; background: white; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px;
         }
-        .checkbox-group label { display: flex; align-items: center; gap: 6px; margin: 0; cursor: pointer; }
+        .checkbox-group label { display: flex; align-items: center; gap: 6px; margin: 0; cursor: pointer; font-size: 0.9rem; }
 
         .cert-requirement-tag {
             display: inline-flex; align-items: center;
@@ -155,6 +155,11 @@
         .cert-supplement-box {
             background: #fffaf0; border: 1px solid #fbd38d; padding: 15px; border-radius: 8px; margin-top: 10px; display: none;
         }
+
+        .cert-rules-box {
+            font-size: 0.8rem; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; line-height: 1.6; color: #4a5568;
+        }
+        .cert-rules-box b { color: var(--primary-ink); }
     </style>
 </head>
 <body>
@@ -177,14 +182,11 @@
                     </select>
                 </div>
                 <div>
-                    <label>代訓單位性質</label>
-                    <select id="deptType" onchange="updateView()">
-                        <option value="一般病房">一般病房 / 門診</option>
-                        <option value="急重症加護">加護病房 (ICU)</option>
-                        <option value="麻醉急診">麻醉部 / 急診醫學部</option>
-                        <option value="手術室">手術室 (OR)</option>
-                        <option value="小兒加護">小兒加護 / 新生兒加護 (NICU)</option>
-                        <option value="嬰兒室產科">嬰兒室 / 產科 / 婦產部</option>
+                    <label>代訓類型</label>
+                    <select id="trainingType" onchange="updateView()">
+                        <option value="短期：未滿6個月">短期：未滿 6 個月</option>
+                        <option value="短期：大於6個月但為非全時">短期：大於 6 個月但為非全時</option>
+                        <option value="長期：全時訓練（6個月或1年以上）">長期：全時訓練（6個月或1年以上）</option>
                     </select>
                 </div>
             </div>
@@ -212,24 +214,16 @@
             <h2>2. 代訓期間檢核</h2>
             <div class="form-row">
                 <div>
-                    <label>代訓類型</label>
-                    <select id="trainingType" onchange="updateView()">
-                        <option value="短期：未滿6個月">短期：未滿 6 個月</option>
-                        <option value="短期：大於6個月但為非全時">短期：大於 6 個月但為非全時</option>
-                        <option value="長期：全時訓練（6個月或1年以上）">長期：全時訓練（6個月或1年以上）</option>
-                    </select>
-                </div>
-                <div>
                     <label>代訓開始日</label>
                     <input type="date" id="startDate" onchange="updateView()">
                 </div>
-            </div>
-
-            <div class="form-row" style="margin-top: 15px;">
                 <div>
                     <label>代訓結束日</label>
                     <input type="date" id="endDate" onchange="updateView()">
                 </div>
+            </div>
+
+            <div class="form-row" style="margin-top: 15px;">
                 <div id="frequencyWrapper" style="display: none;">
                     <label>訓練頻率</label>
                     <select id="frequencyType" onchange="updateView()">
@@ -254,12 +248,33 @@
         <div class="section-card">
             <h2>3. 急救證書與申請文件清單</h2>
             <div style="margin-bottom: 25px;">
-                <div class="full-row" style="background: #f8fafc; margin-bottom: 15px; border: 1px solid #e2e8f0;">
-                    <label style="color: var(--secondary-ink); margin-bottom: 8px;">急救證書判定：</label>
-                    <div id="certRequirementDisplay"></div>
+                <div class="form-row">
+                    <div class="full-row" style="background: #f8fafc; border: 1px solid #e2e8f0; margin-top:0;">
+                        <label style="color: var(--secondary-ink); margin-bottom: 8px;">急救證書判定：</label>
+                        <div id="certRequirementDisplay" style="margin-bottom:10px;"></div>
+                        
+                        <div class="cert-rules-box">
+                            <b>本院急救證書要求小說明：</b><br>
+                            1. <b>應有 ACLS 人員：</b>需執行中重度鎮靜、急重症及 ICU 之主治醫師與住院醫師、麻醉/急診/ICU 護理人員及全體專科護理師。<br>
+                            2. <b>應有 PALS 或 NRP 人員：</b>小兒 ICU、新生兒 ICU 主治醫師；小兒部 R2 以上；產科醫師及婦產部住院醫師；小兒醫療相關醫師。<br>
+                            3. <b>應有 ALS 人員：</b>直接接觸病患之醫師、手術室護理人員。<br>
+                            4. <b>應有 BLS 人員：</b>其餘未接觸病人之醫師、其餘同仁。
+                        </div>
+                    </div>
+                    <div class="full-row" style="background: #fff; border: 1px solid #e2e8f0; margin-top:10px;">
+                        <label>代訓單位性質 (可複選)</label>
+                        <div class="checkbox-group" id="deptTypeGroup">
+                            <label><input type="checkbox" name="deptType" value="一般病房" onchange="updateView()"> 一般病房/門診</label>
+                            <label><input type="checkbox" name="deptType" value="急重症加護" onchange="updateView()"> 加護病房(ICU)</label>
+                            <label><input type="checkbox" name="deptType" value="麻醉急診" onchange="updateView()"> 麻醉部/急診醫學部</label>
+                            <label><input type="checkbox" name="deptType" value="手術室" onchange="updateView()"> 手術室(OR)</label>
+                            <label><input type="checkbox" name="deptType" value="小兒加護" onchange="updateView()"> 小兒/新生兒加護</label>
+                            <label><input type="checkbox" name="deptType" value="嬰兒室產科" onchange="updateView()"> 嬰兒室/產科</label>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-row" style="align-items: end;">
+                <div class="form-row" style="align-items: end; margin-top: 15px;">
                     <div>
                         <label>勾選持有證書 (需涵蓋訓練全期)：</label>
                         <div class="checkbox-group">
@@ -277,8 +292,9 @@
                 </div>
                 
                 <div id="certSupplement" class="cert-supplement-box">
-                    <label class="highlight-red">⚠️ 證書效期不足，須註明：急救訓練預計上課日期</label>
-                    <input type="date" id="certTrainingDate" placeholder="請選擇預計上課日期">
+                    <label class="highlight-red">⚠️ 證書效期不足，務必完成急救訓練並補交更新效期之證書</label>
+                    <label style="font-size: 0.85rem; color: #744210; margin-top: 5px;">請輸入急救訓練預計上課日期：</label>
+                    <input type="date" id="certTrainingDate" onchange="checkCert()">
                 </div>
                 
                 <div id="certAlert" class="alert-box"></div>
@@ -322,7 +338,7 @@
             <table class="summary-table">
                 <tr><th>申請職別</th><td id="resRole"></td></tr>
                 <tr><th>代訓類型</th><td id="resType"></td></tr>
-                <tr><th>代訓單位/部門</th><td id="resDept"></td></tr>
+                <tr><th>代訓單位性質</th><td id="resDept"></td></tr>
                 <tr><th>代訓期間</th><td id="resDates"></td></tr>
                 <tr id="resFreqRow"><th>頻率(天數/週)</th><td id="resFreq"></td></tr>
                 <tr><th>持有證書</th><td id="resCerts"></td></tr>
@@ -377,10 +393,12 @@
 
     function updateView() {
         const role = document.getElementById('roleSelect').value;
-        const deptType = document.getElementById('deptType').value;
         const type = document.getElementById('trainingType').value;
         const startVal = document.getElementById('startDate').value;
         const endVal = document.getElementById('endDate').value;
+        
+        // 獲取所有選中的單位性質
+        const selectedDepts = Array.from(document.querySelectorAll('input[name="deptType"]:checked')).map(cb => cb.value);
         
         const nursingSection = document.getElementById('nursingDeptSection');
         const nursingConfirm = document.getElementById('nursingConfirmBox');
@@ -400,7 +418,7 @@
         partTimeBox.style.display = (!isAutoFreq && freqType === '非全時') ? 'block' : 'none';
 
         checkTrainingDuration(type, startVal, endVal);
-        renderCertRequirements(role, deptType);
+        renderCertRequirements(selectedDepts);
         updateRequiredFiles(role);
         checkCert();
     }
@@ -427,12 +445,39 @@
         }
     }
 
-    function renderCertRequirements(role, dept) {
+    /**
+     * 根據複選的單位，決定顯示何種急救證書要求
+     * 採取「最嚴格判定」：只要選了高階單位，就顯示高階要求
+     */
+    function renderCertRequirements(selectedDepts) {
         const display = document.getElementById('certRequirementDisplay');
         const must = '<span class="must-label">至少必備</span>';
-        if (dept.includes('小兒') || dept.includes('嬰兒')) display.innerHTML = `<span class="cert-requirement-tag req-high">${must} PALS 或 NRP</span>`;
-        else if (dept === '急重症加護' || dept === '麻醉急診') display.innerHTML = `<span class="cert-requirement-tag req-high">${must} ACLS</span>`;
-        else display.innerHTML = `<span class="cert-requirement-tag">${must} BLS (有效期限內)</span>`;
+        
+        if (selectedDepts.length === 0) {
+            display.innerHTML = '<span style="color:#718096; font-size:0.9rem;">(請先勾選代訓單位性質)</span>';
+            return;
+        }
+
+        let level = "BLS";
+        let labelText = "BLS (有效期限內)";
+        let isHigh = false;
+
+        // 判定邏輯優先級：小兒/新生兒(PALS/NRP) > ICU/麻醉(ACLS) > 一般(BLS)
+        if (selectedDepts.some(d => d.includes('小兒') || d.includes('嬰兒'))) {
+            level = "PALS/NRP";
+            labelText = "PALS 或 NRP";
+            isHigh = true;
+        } else if (selectedDepts.some(d => d === '急重症加護' || d === '麻醉急診')) {
+            level = "ACLS";
+            labelText = "ACLS";
+            isHigh = true;
+        } else if (selectedDepts.some(d => d === '手術室')) {
+            level = "ALS";
+            labelText = "ALS";
+            isHigh = false;
+        }
+
+        display.innerHTML = `<span class="cert-requirement-tag ${isHigh ? 'req-high' : ''}">${must} ${labelText}</span>`;
     }
 
     function updateRequiredFiles(role) {
@@ -480,28 +525,55 @@
     }
 
     function checkCert() {
-        const end = document.getElementById('endDate').value;
-        const exp = document.getElementById('certExpiry').value;
+        const endVal = document.getElementById('endDate').value;
+        const expVal = document.getElementById('certExpiry').value;
+        const suppDateVal = document.getElementById('certTrainingDate').value;
         const alert = document.getElementById('certAlert');
         const supplement = document.getElementById('certSupplement');
         
-        if (end && exp && new Date(exp) <= new Date(end)) {
-            alert.innerText = "⚠️ 警告：急救證書效期必須大於訓練結束日。"; alert.style.display = 'block';
+        let errorMsg = "";
+
+        if (endVal && expVal && new Date(expVal) <= new Date(endVal)) {
             supplement.style.display = 'block';
+            
+            // 邏輯判定：補訓日期必須早於過期日期
+            if (suppDateVal && expVal && new Date(suppDateVal) >= new Date(expVal)) {
+                errorMsg = "❌ 警告：預計補訓日期必須「早於」原證書到期日，以確保訓練效期不中斷。";
+            } else {
+                errorMsg = "⚠️ 警告：急救證書效期必須大於訓練結束日。請輸入預計補訓日期。";
+            }
+        } else {
+            supplement.style.display = 'none';
+        }
+
+        if (errorMsg) {
+            alert.innerText = errorMsg; alert.style.display = 'block';
         } else {
             alert.style.display = 'none';
-            supplement.style.display = 'none';
         }
     }
 
     async function finalCheck() {
+        const expVal = document.getElementById('certExpiry').value;
+        const suppDateVal = document.getElementById('certTrainingDate').value;
+        const supplement = document.getElementById('certSupplement');
+        
+        // 單位性質檢核
+        const selectedDepts = Array.from(document.querySelectorAll('input[name="deptType"]:checked')).map(cb => cb.value);
+        if (selectedDepts.length === 0) { alert('請勾選代訓單位性質。'); return; }
+
         if (!validateFiles()) { alert("請勾選所有應備文件清單，並確認已完成相關聯繫。"); return; }
+        
         const certs = Array.from(document.querySelectorAll('input[name="certType"]:checked')).map(c => c.value);
         if (certs.length === 0) { alert('請至少勾選一項持有的有效急救證書。'); return; }
 
-        const supplement = document.getElementById('certSupplement');
-        if (supplement.style.display === 'block' && !document.getElementById('certTrainingDate').value) {
-            alert('急救證書效期不足，請填寫預計補訓日期。'); return;
+        if (supplement.style.display === 'block') {
+            if (!suppDateVal) {
+                alert('急救證書效期不足，請填寫預計補訓日期。'); return;
+            }
+            if (new Date(suppDateVal) >= new Date(expVal)) {
+                alert('預計補訓日期不可晚於或等於原證書到期日！請修正補訓規劃。'); return;
+            }
         }
 
         const submitBtn = document.getElementById('submitBtn');
@@ -511,7 +583,7 @@
         const nursingDeptStr = document.getElementById('nursingDeptSelect').value;
         const isNursingDept = (role === "護理人員" && nursingDeptStr === "護理部");
         
-        const deptValue = (role === "護理人員") ? `${nursingDeptStr} / ${document.getElementById('deptType').value}` : document.getElementById('deptType').value;
+        const deptValue = (role === "護理人員") ? `${nursingDeptStr} (${selectedDepts.join(', ')})` : selectedDepts.join(', ');
         const type = document.getElementById('trainingType').value;
         
         let finalFreq = "全時-每天";
@@ -539,8 +611,8 @@
             endDate: document.getElementById('endDate').value,
             freq: finalFreq,
             certs: certs.join(', '),
-            expiry: document.getElementById('certExpiry').value,
-            certSuppDate: document.getElementById('certTrainingDate').value,
+            expiry: expVal,
+            certSuppDate: suppDateVal,
             resFilesHTML: checkedFilesHTML,
             isNursingDept: isNursingDept
         };
@@ -589,7 +661,7 @@
         const suppRow = document.getElementById('resCertSuppRow');
         if (data.certSuppDate) {
             suppRow.style.display = 'table-row';
-            document.getElementById('resCertSuppDate').innerText = data.certSuppDate;
+            document.getElementById('resCertSuppDate').innerHTML = `${data.certSuppDate} <br><span style="font-size:0.8rem;">(⚠️ 務必完成急救訓練並補交更新效期之急救證書)</span>`;
         } else {
             suppRow.style.display = 'none';
         }
