@@ -87,7 +87,7 @@
             border-radius: 8px; font-size: 0.9rem; color: #2d3748;
             display: flex; align-items: flex-start; gap: 10px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.02); line-height: 1.4;
-            min-height: 70px; cursor: pointer;
+            min-height: 75px; cursor: pointer;
         }
         
         .file-item.error-border { border: 2px solid var(--warning-red); background: #fff5f5; }
@@ -150,8 +150,11 @@
             background: #f1f5f9; padding: 10px; border-radius: 8px; border: 1px dashed #cbd5e0;
         }
         
-        /* 結果頁專用紅字樣式 */
         .highlight-red { color: var(--warning-red); font-weight: bold; }
+        
+        .cert-supplement-box {
+            background: #fffaf0; border: 1px solid #fbd38d; padding: 15px; border-radius: 8px; margin-top: 10px; display: none;
+        }
     </style>
 </head>
 <body>
@@ -272,6 +275,12 @@
                         <input type="date" id="certExpiry" onchange="checkCert()">
                     </div>
                 </div>
+                
+                <div id="certSupplement" class="cert-supplement-box">
+                    <label class="highlight-red">⚠️ 證書效期不足，須註明：急救訓練預計上課日期</label>
+                    <input type="date" id="certTrainingDate" placeholder="請選擇預計上課日期">
+                </div>
+                
                 <div id="certAlert" class="alert-box"></div>
             </div>
 
@@ -317,6 +326,7 @@
                 <tr><th>代訓期間</th><td id="resDates"></td></tr>
                 <tr id="resFreqRow"><th>頻率(天數/週)</th><td id="resFreq"></td></tr>
                 <tr><th>持有證書</th><td id="resCerts"></td></tr>
+                <tr id="resCertSuppRow" style="display:none;"><th>預計補訓日期</th><td id="resCertSuppDate" class="highlight-red"></td></tr>
                 <tr><th>已確認備妥文件</th><td id="resFiles"></td></tr>
             </table>
         </div>
@@ -341,41 +351,23 @@
 </div>
 
 <script>
-    // 文件資料庫 - 依照需求修正文字
+    // 文件資料庫
     const fileData = [
-        { 
-            id: "f1", 
-            title: "進修申請表", 
-            desc: "(填寫迄今完整經歷，醫師且須註明職級)", 
-            roles: ["ALL"] 
-        },
-        { 
-            id: "f2", 
-            title: "執業執照", 
-            desc: "(正、反面影本需加蓋與正本相符章及查證)", 
-            roles: ["ALL"], 
-            resSuffix: " <span class='highlight-red'>正反面</span> 且 <span class='highlight-red'>已查證</span>" 
-        },
-        { 
-            id: "f3", 
-            title: "醫師/醫事人員證書", 
-            desc: "(核發日期須清晰，影本需加蓋與正本相符章及查證)", 
-            roles: ["ALL"], 
-            resSuffix: " 且 <span class='highlight-red'>已查證</span>" 
-        },
-        { 
-            id: "f4", 
-            title: "畢業證書", 
-            desc: "(核發日期須清晰，影本需加蓋與正本相符章及查證)", 
-            roles: ["ALL"], 
-            resSuffix: " 且 <span class='highlight-red'>已查證</span>" 
-        },
+        { id: "f1", title: "進修申請表", desc: "(填寫迄今完整經歷，醫師且須註明職級)", roles: ["ALL"] },
+        { id: "f2", title: "執業執照", desc: "(正、反面影本需加蓋與正本相符章及查證)", roles: ["ALL"], resSuffix: " <span class='highlight-red'>正反面</span> 且 <span class='highlight-red'>已查證</span>" },
+        { id: "f3", title: "醫師/醫事人員證書", desc: "(核發日期須清晰，影本需加蓋與正本相符章及查證)", roles: ["ALL"], resSuffix: " 且 <span class='highlight-red'>已查證</span>" },
+        { id: "f4", title: "畢業證書", desc: "(核發日期須清晰，影本需加蓋與正本相符章及查證)", roles: ["ALL"], resSuffix: " 且 <span class='highlight-red'>已查證</span>" },
         { id: "f5", title: "管制藥品使用執照", desc: "(醫師申請代訓必備)", roles: ["主治醫師", "住院醫師"] },
         { id: "f6", title: "效期內合格之急救證書", desc: "(依單位要求如 ACLS/PALS/BLS，需涵蓋受訓全期)", roles: ["ALL"] },
         { id: "f7", title: "近期考核成績", desc: "(原屬機構一年內訓練期間評核/評估表單，或最近一次之考核證明)", roles: ["ALL"] },
         { id: "f8", title: "聯合訓練計畫", desc: "(需依本院聯合訓練範本格式撰寫)", roles: ["住院醫師", "護理人員", "其他醫事人員"], special: "PLAN" },
         { id: "f9", title: "在職教育訓練紀錄", desc: "(最近一年內之相關繼續教育紀錄，衛福部積分明細亦可)", roles: ["ALL"] },
-        { id: "f10", title: "醫培/教補計畫證明", desc: "(如為政府或學會相關補助計畫代訓者需附)", roles: ["護理人員", "其他醫事人員"] }
+        { 
+            id: "f10", 
+            title: "醫培/教補計畫證明", 
+            desc: "(請截圖衛福部醫培系統頁面，需含補助期限及已核定受訓次數)並請於申請之公文中註明", 
+            roles: ["護理人員", "其他醫事人員"] 
+        }
     ];
 
     function updateView() {
@@ -394,17 +386,20 @@
             nursingSection.style.display = 'none';
         }
 
+        // 規則更新：短期：未滿6個月 OR 短期：大於6個月但為非全時 均隱藏頻率選擇
         const freqWrapper = document.getElementById('frequencyWrapper');
-        const isShortUnder6 = (type === '短期：未滿6個月');
-        freqWrapper.style.display = isShortUnder6 ? 'none' : 'block';
+        const isAutoFreq = (type === '短期：未滿6個月' || type === '短期：大於6個月但為非全時');
+        freqWrapper.style.display = isAutoFreq ? 'none' : 'block';
 
         const freqType = document.getElementById('frequencyType').value;
         const partTimeBox = document.getElementById('partTimeBox');
-        partTimeBox.style.display = (!isShortUnder6 && freqType === '非全時') ? 'block' : 'none';
+        // 只有在長期訓練且選非全時時顯示細節
+        partTimeBox.style.display = (!isAutoFreq && freqType === '非全時') ? 'block' : 'none';
 
         checkTrainingDuration(type, startVal, endVal);
         renderCertRequirements(role, deptType);
         updateRequiredFiles(role);
+        checkCert(); // 更新時也檢查一次證書
     }
 
     function checkTrainingDuration(type, startVal, endVal) {
@@ -485,15 +480,27 @@
         const end = document.getElementById('endDate').value;
         const exp = document.getElementById('certExpiry').value;
         const alert = document.getElementById('certAlert');
+        const supplement = document.getElementById('certSupplement');
+        
         if (end && exp && new Date(exp) <= new Date(end)) {
             alert.innerText = "⚠️ 警告：急救證書效期必須大於訓練結束日。"; alert.style.display = 'block';
-        } else alert.style.display = 'none';
+            supplement.style.display = 'block';
+        } else {
+            alert.style.display = 'none';
+            supplement.style.display = 'none';
+        }
     }
 
     async function finalCheck() {
         if (!validateFiles()) { alert("請勾選所有應備文件清單，並確認已完成相關聯繫。"); return; }
         const certs = Array.from(document.querySelectorAll('input[name="certType"]:checked')).map(c => c.value);
         if (certs.length === 0) { alert('請至少勾選一項持有的有效急救證書。'); return; }
+
+        // 若效期不足，檢查補訓日期是否填寫
+        const supplement = document.getElementById('certSupplement');
+        if (supplement.style.display === 'block' && !document.getElementById('certTrainingDate').value) {
+            alert('急救證書效期不足，請填寫預計補訓日期。'); return;
+        }
 
         const submitBtn = document.getElementById('submitBtn');
         submitBtn.disabled = true; submitBtn.innerText = "正在傳送檢核紀錄...";
@@ -504,11 +511,19 @@
         
         const deptValue = (role === "護理人員") ? `${nursingDeptStr} / ${document.getElementById('deptType').value}` : document.getElementById('deptType').value;
         const type = document.getElementById('trainingType').value;
-        const freqType = (type === '短期：未滿6個月') ? '每天' : document.getElementById('frequencyType').value;
-        const days = (freqType === '每天') ? 5 : document.getElementById('daysPerWeek').value;
         
-        // 邏輯保持：填寫 5 天則顯示為 全時-每天
-        const finalFreq = (parseInt(days) === 5 || freqType === '每天') ? "全時-每天" : `${days} 天/週`;
+        // 頻率邏輯保留且修正
+        let finalFreq = "全時-每天";
+        if (type === '短期：大於6個月但為非全時') {
+            finalFreq = "非全時";
+        } else if (type === '長期：全時訓練（6個月或1年以上）') {
+            const freqType = document.getElementById('frequencyType').value;
+            const days = document.getElementById('daysPerWeek').value;
+            finalFreq = (parseInt(days) === 5 || freqType === '每天') ? "全時-每天" : `${days} 天/週`;
+        } else {
+            // 短期未滿6個月預設顯示全時
+            finalFreq = "全時-每天";
+        }
 
         const checkedFilesHTML = Array.from(document.querySelectorAll('.file-check:checked')).map((cb, index) => {
             const titleEl = cb.closest('.file-item').querySelector('.file-title');
@@ -527,11 +542,11 @@
             freq: finalFreq,
             certs: certs.join(', '),
             expiry: document.getElementById('certExpiry').value,
+            certSuppDate: document.getElementById('certTrainingDate').value,
             resFilesHTML: checkedFilesHTML,
             isNursingDept: isNursingDept
         };
 
-        // 後端 Apps Script 串接網址保留
         const scriptURL = "https://script.google.com/macros/s/AKfycbze5ulQWOn4i_SW0IiazF1Wvfn38ZyRsihG5_zCqhTNmEF4lEC_uI-MNCe0nXf_RHk3kw/exec";
 
         try {
@@ -563,9 +578,9 @@
         document.getElementById('resDept').innerText = data.dept;
         document.getElementById('resDates').innerText = `${data.startDate} 至 ${data.endDate}`;
         
-        // 根據需求：若代訓類型為短期：未滿6個月，不顯示頻率
         const freqRow = document.getElementById('resFreqRow');
-        if (data.type === '短期：未滿6個月') {
+        // 若選短期未滿6個月 或 短期大於6個月但為非全時，結果頁隱藏頻率欄位
+        if (data.type.includes('短期')) {
             freqRow.style.display = 'none';
         } else {
             freqRow.style.display = 'table-row';
@@ -573,6 +588,15 @@
         }
 
         document.getElementById('resCerts').innerText = `${data.certs} (證書效期 ${data.expiry})`;
+        
+        const suppRow = document.getElementById('resCertSuppRow');
+        if (data.certSuppDate) {
+            suppRow.style.display = 'table-row';
+            document.getElementById('resCertSuppDate').innerText = data.certSuppDate;
+        } else {
+            suppRow.style.display = 'none';
+        }
+
         document.getElementById('resFiles').innerHTML = data.resFilesHTML;
         window.scrollTo(0,0);
     }
