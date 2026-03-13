@@ -124,8 +124,8 @@
         #resultView { display: none; }
         .big-warning {
             background: #fff5f5; border: 3px solid #f56565; color: #c53030;
-            padding: 20px; border-radius: 12px; margin-bottom: 25px;
-            font-weight: bold; line-height: 1.8; font-size: 1.1rem;
+            padding: 20px; border-radius: 12px; margin-bottom: 20px;
+            font-weight: bold; line-height: 1.8; font-size: 1.05rem;
         }
         .summary-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         .summary-table th, .summary-table td { padding: 12px; border-bottom: 1px solid #edf2f7; text-align: left; vertical-align: top; }
@@ -137,11 +137,19 @@
         
         .contact-card { padding: 15px; background: #f0f7ff; border-radius: 10px; border-left: 5px solid var(--info-blue); }
         .contact-title { font-weight: bold; color: var(--secondary-ink); margin-bottom: 8px; display: block; border-bottom: 1px solid #bee3f8; padding-bottom: 4px; }
+        .contact-item { font-size: 0.85rem; color: #2d3748; line-height: 1.6; }
         
+        .resource-list {
+            margin: 15px 0; padding: 15px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px;
+        }
+        .resource-list a { color: var(--info-blue); font-weight: bold; text-decoration: none; display: block; margin: 5px 0; }
+        .resource-list a:hover { text-decoration: underline; }
+
         .save-tip {
             text-align: center; color: #718096; font-size: 0.9rem; margin-top: 25px;
             background: #f1f5f9; padding: 10px; border-radius: 8px; border: 1px dashed #cbd5e0;
         }
+        .nursing-alert { color: var(--warning-red); font-weight: bold; margin-top: 10px; display: none; }
     </style>
 </head>
 <body>
@@ -150,6 +158,7 @@
     <div id="formView">
         <header><h1>臺大醫院代訓申請檢核系統</h1></header>
 
+        <!-- 1. 基本資料 -->
         <div class="section-card">
             <h2>1. 受訓人員基本資料</h2>
             <div class="form-row">
@@ -194,6 +203,7 @@
             </div>
         </div>
 
+        <!-- 2. 期間檢核 -->
         <div class="section-card">
             <h2>2. 代訓期間檢核</h2>
             <div class="form-row">
@@ -237,6 +247,7 @@
             <div class="info-box" id="durationInfo">請輸入代訓日期。</div>
         </div>
 
+        <!-- 3. 文件清單 -->
         <div class="section-card">
             <h2>3. 急救證書與申請文件清單</h2>
             <div style="margin-bottom: 25px;">
@@ -276,11 +287,24 @@
         <button class="btn-submit" id="submitBtn" onclick="finalCheck()">送出檢核結果</button>
     </div>
 
+    <!-- 結果頁面 -->
     <div id="resultView">
         <header><h1 style="color: var(--success-green); border-bottom-color: var(--success-green);">✅ 檢核通過狀況明細</h1></header>
+        
         <div class="big-warning">
-            ⚠️ 併大警示：<br>
-            須至遲應於起訓前 1 個月以上，由原屬機構備妥公文並附上所有應備文件電子檔來函，方與受理。
+            🌟 溫馨提醒：<br>
+            須至遲應於起訓前 1 個月以上，由原屬機構備妥公文並附上所有應備文件電子檔來函申請，方予受理。<br>
+            如有疑義請參閱本院教學部網站：<a href="https://pse.is/NTUH" target="_blank" style="color: #c53030;">https://pse.is/NTUH</a>
+        </div>
+
+        <div id="resNursingAlert" class="big-warning" style="background: #fff; border-color: var(--warning-red); display: none;">
+            ⚠️ 提醒：護理部代訓申請務必使用【臺大醫院護理部聯合訓練計畫】
+        </div>
+
+        <div class="resource-list">
+            <strong>📂 參考文件連結：</strong>
+            <a href="https://www.ntuh.gov.tw/edu/Fpage.action?muid=1026&fid=929" target="_blank">1. 申請代訓程序說明</a>
+            <a href="https://www.ntuh.gov.tw/edu/Fpage.action?muid=1026&fid=929" target="_blank">2. 各醫院擬薦送人員應備文件</a>
         </div>
 
         <div class="section-card">
@@ -298,20 +322,25 @@
 
         <div class="contact-grid">
             <div class="contact-card">
-                <strong class="contact-title">教學部 窗口</strong>
-                <div class="contact-item">‧ 長期(>6月)：262112 / 短期(<6月)：265634</div>
+                <strong class="contact-title">1. 長期代訓窗口</strong>
+                <div class="contact-item">陳小姐 (02)23123456 分機 265612</div>
             </div>
-            <div class="contact-card" style="border-left-color: #64748b;">
-                <strong class="contact-title">相關單位聯絡</strong>
-                <div class="contact-item">‧ 護理部：265930 / 藥劑部：262334 / 醫檢部：262531</div>
+            <div class="contact-card">
+                <strong class="contact-title">2. 短期代訓窗口</strong>
+                <div class="contact-item">
+                    葉小姐 (02)23123456 分機 263687<br>
+                    E-mail：<a href="mailto:prettyhana@ntuh.gov.tw" style="color:inherit;">prettyhana@ntuh.gov.tw</a>
+                </div>
             </div>
         </div>
+        
         <div class="save-tip">📸 請對此頁面進行截圖或存檔，並隨同申請文件送件。</div>
         <button class="btn-submit" onclick="location.reload()" style="background: var(--text-gray); margin-top: 25px;">重新填寫</button>
     </div>
 </div>
 
 <script>
+    // 文件資料庫 (保留所有說明與細節)
     const fileData = [
         { id: "f1", title: "進修申請表", desc: "(醫師須註記職級與完整經歷、護理部代訓須由該部護理長簽章)", roles: ["ALL"] },
         { id: "f2", title: "執業執照", desc: "(影本需加蓋與正本相符章及查證資料)", roles: ["ALL"], resSuffix: " 且已查證" },
@@ -332,6 +361,7 @@
         const startVal = document.getElementById('startDate').value;
         const endVal = document.getElementById('endDate').value;
         
+        // 護理部邏輯連動
         const nursingSection = document.getElementById('nursingDeptSection');
         const nursingConfirm = document.getElementById('nursingConfirmBox');
         if (role === "護理人員") {
@@ -341,6 +371,7 @@
             nursingSection.style.display = 'none';
         }
 
+        // 頻率邏輯連動
         const freqWrapper = document.getElementById('frequencyWrapper');
         const isShortUnder6 = (type === '短期：未滿6個月');
         freqWrapper.style.display = isShortUnder6 ? 'none' : 'block';
@@ -446,7 +477,10 @@
         submitBtn.disabled = true; submitBtn.innerText = "正在傳送檢核紀錄...";
 
         const role = document.getElementById('roleSelect').value;
-        const deptValue = (role === "護理人員") ? `${document.getElementById('nursingDeptSelect').value} / ${document.getElementById('deptType').value}` : document.getElementById('deptType').value;
+        const nursingDeptStr = document.getElementById('nursingDeptSelect').value;
+        const isNursingDept = (role === "護理人員" && nursingDeptStr === "護理部");
+        
+        const deptValue = (role === "護理人員") ? `${nursingDeptStr} / ${document.getElementById('deptType').value}` : document.getElementById('deptType').value;
         const type = document.getElementById('trainingType').value;
         const freqType = (type === '短期：未滿6個月') ? '每天' : document.getElementById('frequencyType').value;
         const days = (freqType === '每天') ? 5 : document.getElementById('daysPerWeek').value;
@@ -456,7 +490,7 @@
             const titleEl = cb.closest('.file-item').querySelector('.file-title');
             let text = titleEl.innerText;
             const suffix = titleEl.getAttribute('data-suffix') || '';
-            if (text.includes("聯合訓練計畫") && deptValue.includes("護理部")) text += " (需護理部格式)";
+            if (text.includes("聯合訓練計畫") && isNursingDept) text += " (需護理部格式)";
             return `${index + 1}. ${text}${suffix}`;
         }).join('\n');
 
@@ -469,10 +503,10 @@
             freq: finalFreq,
             certs: certs.join(', '),
             expiry: document.getElementById('certExpiry').value,
-            resFiles: checkedFilesText
+            resFiles: checkedFilesText,
+            isNursingDept: isNursingDept
         };
 
-        // 已更新為您最新的 Apps Script 網址
         const scriptURL = "https://script.google.com/macros/s/AKfycbze5ulQWOn4i_SW0IiazF1Wvfn38ZyRsihG5_zCqhTNmEF4lEC_uI-MNCe0nXf_RHk3kw/exec";
 
         try {
@@ -495,6 +529,12 @@
     function showResult(data) {
         document.getElementById('formView').style.display = 'none';
         document.getElementById('resultView').style.display = 'block';
+        
+        // 護理部專屬警示
+        if (data.isNursingDept) {
+            document.getElementById('resNursingAlert').style.display = 'block';
+        }
+
         document.getElementById('resRole').innerText = data.role;
         document.getElementById('resType').innerText = data.type;
         document.getElementById('resDept').innerText = data.dept;
