@@ -149,16 +149,18 @@
             text-align: center; color: #718096; font-size: 0.9rem; margin-top: 25px;
             background: #f1f5f9; padding: 10px; border-radius: 8px; border: 1px dashed #cbd5e0;
         }
-        .nursing-alert { color: var(--warning-red); font-weight: bold; margin-top: 10px; display: none; }
+        
+        /* 結果頁專用紅字樣式 */
+        .highlight-red { color: var(--warning-red); font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="canvas-container">
+    <!-- 表單頁面 -->
     <div id="formView">
         <header><h1>臺大醫院代訓申請檢核系統</h1></header>
 
-        <!-- 1. 基本資料 -->
         <div class="section-card">
             <h2>1. 受訓人員基本資料</h2>
             <div class="form-row">
@@ -203,7 +205,6 @@
             </div>
         </div>
 
-        <!-- 2. 期間檢核 -->
         <div class="section-card">
             <h2>2. 代訓期間檢核</h2>
             <div class="form-row">
@@ -247,7 +248,6 @@
             <div class="info-box" id="durationInfo">請輸入代訓日期。</div>
         </div>
 
-        <!-- 3. 文件清單 -->
         <div class="section-card">
             <h2>3. 急救證書與申請文件清單</h2>
             <div style="margin-bottom: 25px;">
@@ -256,16 +256,17 @@
                     <div id="certRequirementDisplay"></div>
                 </div>
 
-                <label>勾選持有證書 (需涵蓋訓練全期)：</label>
-                <div class="checkbox-group">
-                    <label><input type="checkbox" name="certType" value="ACLS" onchange="checkCert()"> ACLS</label>
-                    <label><input type="checkbox" name="certType" value="ALS" onchange="checkCert()"> ALS</label>
-                    <label><input type="checkbox" name="certType" value="BLS" onchange="checkCert()"> BLS</label>
-                    <label><input type="checkbox" name="certType" value="PALS" onchange="checkCert()"> PALS</label>
-                    <label><input type="checkbox" name="certType" value="NRP" onchange="checkCert()"> NRP</label>
-                </div>
-
-                <div class="form-row" style="margin-top:15px;">
+                <div class="form-row" style="align-items: end;">
+                    <div>
+                        <label>勾選持有證書 (需涵蓋訓練全期)：</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="certType" value="ACLS" onchange="checkCert()"> ACLS</label>
+                            <label><input type="checkbox" name="certType" value="ALS" onchange="checkCert()"> ALS</label>
+                            <label><input type="checkbox" name="certType" value="BLS" onchange="checkCert()"> BLS</label>
+                            <label><input type="checkbox" name="certType" value="PALS" onchange="checkCert()"> PALS</label>
+                            <label><input type="checkbox" name="certType" value="NRP" onchange="checkCert()"> NRP</label>
+                        </div>
+                    </div>
                     <div>
                         <label>證書到期日</label>
                         <input type="date" id="certExpiry" onchange="checkCert()">
@@ -314,7 +315,7 @@
                 <tr><th>代訓類型</th><td id="resType"></td></tr>
                 <tr><th>代訓單位/部門</th><td id="resDept"></td></tr>
                 <tr><th>代訓期間</th><td id="resDates"></td></tr>
-                <tr><th>頻率(天數/週)</th><td id="resFreq"></td></tr>
+                <tr id="resFreqRow"><th>頻率(天數/週)</th><td id="resFreq"></td></tr>
                 <tr><th>持有證書</th><td id="resCerts"></td></tr>
                 <tr><th>已確認備妥文件</th><td id="resFiles"></td></tr>
             </table>
@@ -340,17 +341,40 @@
 </div>
 
 <script>
-    // 文件資料庫 (保留所有說明與細節)
+    // 文件資料庫 - 依照需求修正文字
     const fileData = [
-        { id: "f1", title: "進修申請表", desc: "(醫師須註記職級與完整經歷、護理部代訓須由該部護理長簽章)", roles: ["ALL"] },
-        { id: "f2", title: "執業執照", desc: "(影本需加蓋與正本相符章及查證資料)", roles: ["ALL"], resSuffix: " 且已查證" },
-        { id: "f3", title: "醫師/醫事人員證書", desc: "(影本需加蓋與正本相符章及查證資料)", roles: ["ALL"], resSuffix: " 且已查證" },
-        { id: "f4", title: "畢業證書", desc: "(影本需加蓋與正本相符章及查證資料)", roles: ["ALL"], resSuffix: " 且已查證" },
+        { 
+            id: "f1", 
+            title: "進修申請表", 
+            desc: "(填寫迄今完整經歷，醫師且須註明職級)", 
+            roles: ["ALL"] 
+        },
+        { 
+            id: "f2", 
+            title: "執業執照", 
+            desc: "(正、反面影本需加蓋與正本相符章及查證)", 
+            roles: ["ALL"], 
+            resSuffix: " <span class='highlight-red'>正反面</span> 且 <span class='highlight-red'>已查證</span>" 
+        },
+        { 
+            id: "f3", 
+            title: "醫師/醫事人員證書", 
+            desc: "(核發日期須清晰，影本需加蓋與正本相符章及查證)", 
+            roles: ["ALL"], 
+            resSuffix: " 且 <span class='highlight-red'>已查證</span>" 
+        },
+        { 
+            id: "f4", 
+            title: "畢業證書", 
+            desc: "(核發日期須清晰，影本需加蓋與正本相符章及查證)", 
+            roles: ["ALL"], 
+            resSuffix: " 且 <span class='highlight-red'>已查證</span>" 
+        },
         { id: "f5", title: "管制藥品使用執照", desc: "(醫師申請代訓必備)", roles: ["主治醫師", "住院醫師"] },
         { id: "f6", title: "效期內合格之急救證書", desc: "(依單位要求如 ACLS/PALS/BLS，需涵蓋受訓全期)", roles: ["ALL"] },
-        { id: "f7", title: "近期考核成績", desc: "(原屬機構最近一年之考核證明)", roles: ["ALL"] },
-        { id: "f8", title: "聯合訓練計畫", desc: "(依本院範本撰寫，需雙方主管簽章)", roles: ["住院醫師", "護理人員", "其他醫事人員"], special: "PLAN" },
-        { id: "f9", title: "在職教育訓練紀錄", desc: "(最近一年內之相關繼續教育紀錄)", roles: ["ALL"] },
+        { id: "f7", title: "近期考核成績", desc: "(原屬機構一年內訓練期間評核/評估表單，或最近一次之考核證明)", roles: ["ALL"] },
+        { id: "f8", title: "聯合訓練計畫", desc: "(需依本院聯合訓練範本格式撰寫)", roles: ["住院醫師", "護理人員", "其他醫事人員"], special: "PLAN" },
+        { id: "f9", title: "在職教育訓練紀錄", desc: "(最近一年內之相關繼續教育紀錄，衛福部積分明細亦可)", roles: ["ALL"] },
         { id: "f10", title: "醫培/教補計畫證明", desc: "(如為政府或學會相關補助計畫代訓者需附)", roles: ["護理人員", "其他醫事人員"] }
     ];
 
@@ -361,7 +385,6 @@
         const startVal = document.getElementById('startDate').value;
         const endVal = document.getElementById('endDate').value;
         
-        // 護理部邏輯連動
         const nursingSection = document.getElementById('nursingDeptSection');
         const nursingConfirm = document.getElementById('nursingConfirmBox');
         if (role === "護理人員") {
@@ -371,7 +394,6 @@
             nursingSection.style.display = 'none';
         }
 
-        // 頻率邏輯連動
         const freqWrapper = document.getElementById('frequencyWrapper');
         const isShortUnder6 = (type === '短期：未滿6個月');
         freqWrapper.style.display = isShortUnder6 ? 'none' : 'block';
@@ -484,15 +506,17 @@
         const type = document.getElementById('trainingType').value;
         const freqType = (type === '短期：未滿6個月') ? '每天' : document.getElementById('frequencyType').value;
         const days = (freqType === '每天') ? 5 : document.getElementById('daysPerWeek').value;
-        const finalFreq = (freqType === '每天') ? "全時-每天" : `${days} 天/週`;
+        
+        // 邏輯保持：填寫 5 天則顯示為 全時-每天
+        const finalFreq = (parseInt(days) === 5 || freqType === '每天') ? "全時-每天" : `${days} 天/週`;
 
-        const checkedFilesText = Array.from(document.querySelectorAll('.file-check:checked')).map((cb, index) => {
+        const checkedFilesHTML = Array.from(document.querySelectorAll('.file-check:checked')).map((cb, index) => {
             const titleEl = cb.closest('.file-item').querySelector('.file-title');
             let text = titleEl.innerText;
             const suffix = titleEl.getAttribute('data-suffix') || '';
-            if (text.includes("聯合訓練計畫") && isNursingDept) text += " (需護理部格式)";
-            return `${index + 1}. ${text}${suffix}`;
-        }).join('\n');
+            if (text.includes("聯合訓練計畫") && isNursingDept) text += " <span class='highlight-red'>(需護理部格式)</span>";
+            return `<div>${index + 1}. ${text}${suffix}</div>`;
+        }).join('');
 
         const formData = {
             role: role,
@@ -503,10 +527,11 @@
             freq: finalFreq,
             certs: certs.join(', '),
             expiry: document.getElementById('certExpiry').value,
-            resFiles: checkedFilesText,
+            resFilesHTML: checkedFilesHTML,
             isNursingDept: isNursingDept
         };
 
+        // 後端 Apps Script 串接網址保留
         const scriptURL = "https://script.google.com/macros/s/AKfycbze5ulQWOn4i_SW0IiazF1Wvfn38ZyRsihG5_zCqhTNmEF4lEC_uI-MNCe0nXf_RHk3kw/exec";
 
         try {
@@ -519,7 +544,6 @@
             showResult(formData);
         } catch (e) {
             console.error(e);
-            alert("傳送發生錯誤，但仍會顯示檢核結果供您截圖備份。");
             showResult(formData);
         } finally {
             submitBtn.disabled = false; submitBtn.innerText = "送出檢核結果";
@@ -530,7 +554,6 @@
         document.getElementById('formView').style.display = 'none';
         document.getElementById('resultView').style.display = 'block';
         
-        // 護理部專屬警示
         if (data.isNursingDept) {
             document.getElementById('resNursingAlert').style.display = 'block';
         }
@@ -539,9 +562,18 @@
         document.getElementById('resType').innerText = data.type;
         document.getElementById('resDept').innerText = data.dept;
         document.getElementById('resDates').innerText = `${data.startDate} 至 ${data.endDate}`;
-        document.getElementById('resFreq').innerText = data.freq;
-        document.getElementById('resCerts').innerText = `${data.certs} (效期至 ${data.expiry})`;
-        document.getElementById('resFiles').innerText = data.resFiles;
+        
+        // 根據需求：若代訓類型為短期：未滿6個月，不顯示頻率
+        const freqRow = document.getElementById('resFreqRow');
+        if (data.type === '短期：未滿6個月') {
+            freqRow.style.display = 'none';
+        } else {
+            freqRow.style.display = 'table-row';
+            document.getElementById('resFreq').innerText = data.freq;
+        }
+
+        document.getElementById('resCerts').innerText = `${data.certs} (證書效期 ${data.expiry})`;
+        document.getElementById('resFiles').innerHTML = data.resFilesHTML;
         window.scrollTo(0,0);
     }
 
