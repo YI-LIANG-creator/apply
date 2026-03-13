@@ -129,7 +129,7 @@
         }
         .summary-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         .summary-table th, .summary-table td { padding: 12px; border-bottom: 1px solid #edf2f7; text-align: left; vertical-align: top; }
-        .summary-table th { background: #f8fafc; color: #64748b; width: 160px; font-size: 0.9rem; }
+        .summary-table th { background: #f8fafc; color: #64748b; width: 180px; font-size: 0.9rem; }
         .summary-table td { color: #1e293b; font-weight: 500; font-size: 0.95rem; line-height: 1.8; white-space: pre-wrap; }
         
         .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
@@ -327,7 +327,7 @@
                 <tr id="resFreqRow"><th>頻率(天數/週)</th><td id="resFreq"></td></tr>
                 <tr><th>持有證書</th><td id="resCerts"></td></tr>
                 <tr id="resCertSuppRow" style="display:none;"><th>預計補訓日期</th><td id="resCertSuppDate" class="highlight-red"></td></tr>
-                <tr><th>已確認備妥文件</th><td id="resFiles"></td></tr>
+                <tr><th>請申請人確認是否已備妥應備文件</th><td id="resFiles"></td></tr>
             </table>
         </div>
 
@@ -345,6 +345,11 @@
             </div>
         </div>
         
+        <div class="big-warning" style="margin-top: 25px; border-style: dashed; background: #f8fafc; border-color: #cbd5e0; color: #4a5568;">
+            📢 最終提醒：<br>
+            請注意，代訓申請「至遲應於起訓前 1 個月以上」由原屬機構正式發文，並備妥上述所有應備文件電子檔隨附來函，方予受理。
+        </div>
+
         <div class="save-tip">📸 請對此頁面進行截圖或存檔，並隨同申請文件送件。</div>
         <button class="btn-submit" onclick="location.reload()" style="background: var(--text-gray); margin-top: 25px;">重新填寫</button>
     </div>
@@ -386,20 +391,18 @@
             nursingSection.style.display = 'none';
         }
 
-        // 規則更新：短期：未滿6個月 OR 短期：大於6個月但為非全時 均隱藏頻率選擇
         const freqWrapper = document.getElementById('frequencyWrapper');
         const isAutoFreq = (type === '短期：未滿6個月' || type === '短期：大於6個月但為非全時');
         freqWrapper.style.display = isAutoFreq ? 'none' : 'block';
 
         const freqType = document.getElementById('frequencyType').value;
         const partTimeBox = document.getElementById('partTimeBox');
-        // 只有在長期訓練且選非全時時顯示細節
         partTimeBox.style.display = (!isAutoFreq && freqType === '非全時') ? 'block' : 'none';
 
         checkTrainingDuration(type, startVal, endVal);
         renderCertRequirements(role, deptType);
         updateRequiredFiles(role);
-        checkCert(); // 更新時也檢查一次證書
+        checkCert();
     }
 
     function checkTrainingDuration(type, startVal, endVal) {
@@ -496,7 +499,6 @@
         const certs = Array.from(document.querySelectorAll('input[name="certType"]:checked')).map(c => c.value);
         if (certs.length === 0) { alert('請至少勾選一項持有的有效急救證書。'); return; }
 
-        // 若效期不足，檢查補訓日期是否填寫
         const supplement = document.getElementById('certSupplement');
         if (supplement.style.display === 'block' && !document.getElementById('certTrainingDate').value) {
             alert('急救證書效期不足，請填寫預計補訓日期。'); return;
@@ -512,7 +514,6 @@
         const deptValue = (role === "護理人員") ? `${nursingDeptStr} / ${document.getElementById('deptType').value}` : document.getElementById('deptType').value;
         const type = document.getElementById('trainingType').value;
         
-        // 頻率邏輯保留且修正
         let finalFreq = "全時-每天";
         if (type === '短期：大於6個月但為非全時') {
             finalFreq = "非全時";
@@ -520,9 +521,6 @@
             const freqType = document.getElementById('frequencyType').value;
             const days = document.getElementById('daysPerWeek').value;
             finalFreq = (parseInt(days) === 5 || freqType === '每天') ? "全時-每天" : `${days} 天/週`;
-        } else {
-            // 短期未滿6個月預設顯示全時
-            finalFreq = "全時-每天";
         }
 
         const checkedFilesHTML = Array.from(document.querySelectorAll('.file-check:checked')).map((cb, index) => {
@@ -579,7 +577,6 @@
         document.getElementById('resDates').innerText = `${data.startDate} 至 ${data.endDate}`;
         
         const freqRow = document.getElementById('resFreqRow');
-        // 若選短期未滿6個月 或 短期大於6個月但為非全時，結果頁隱藏頻率欄位
         if (data.type.includes('短期')) {
             freqRow.style.display = 'none';
         } else {
