@@ -60,7 +60,6 @@
         }
 
         label { display: block; font-size: 0.9rem; margin-bottom: 6px; font-weight: bold; color: var(--text-gray); }
-        .note { color: var(--warning-red); font-weight: normal; font-size: 0.8rem; margin-left: 4px; }
 
         select, input[type="date"], input[type="text"], input[type="number"] {
             width: 100%; padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem;
@@ -78,78 +77,40 @@
         }
 
         @media (max-width: 850px) {
-            .file-sections-container {
-                grid-template-columns: 1fr; 
-            }
+            .file-sections-container { grid-template-columns: 1fr; }
         }
 
-        .file-list {
-            margin: 0; padding: 0; list-style: none;
-            display: flex; flex-direction: column;
-            gap: 8px;
-        }
+        .file-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
 
         .file-item {
             background: #fff; border: 1px solid #e2e8f0; padding: 10px 14px;
             border-radius: 8px; font-size: 0.9rem; color: #2d3748;
-            display: flex; align-items: flex-start;
-            gap: 10px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-            line-height: 1.4;
-            min-height: 60px;
-            cursor: pointer;
+            display: flex; align-items: flex-start; gap: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02); line-height: 1.4;
+            min-height: 70px; cursor: pointer;
         }
         
-        .file-item.error-border {
-            border: 2px solid var(--warning-red);
-            background: #fff5f5;
-        }
-
-        .file-check {
-            width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0;
-            cursor: pointer;
-        }
-
-        .file-content {
-            display: flex; flex-direction: column;
-            flex-grow: 1;
-        }
-
-        .file-title {
-            font-weight: bold;
-            display: flex; align-items: center;
-            color: var(--primary-ink);
-        }
-        .file-desc {
-            font-size: 0.8rem;
-            color: #718096;
-            margin-top: 2px;
-        }
-        .file-warning {
-            color: var(--warning-red);
-            font-size: 0.75rem;
-            margin-top: 4px;
-            font-weight: bold;
-            display: none;
-        }
+        .file-item.error-border { border: 2px solid var(--warning-red); background: #fff5f5; }
+        .file-check { width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0; cursor: pointer; }
+        .file-content { display: flex; flex-direction: column; flex-grow: 1; }
+        .file-title { font-weight: bold; display: flex; align-items: center; color: var(--primary-ink); }
+        .file-desc { font-size: 0.8rem; color: #718096; margin-top: 2px; }
+        .file-warning { color: var(--warning-red); font-size: 0.75rem; margin-top: 4px; font-weight: bold; display: none; }
 
         button.btn-submit {
             width: 100%; padding: 16px; background: var(--gradient);
             color: white; border: none; border-radius: 10px;
             font-size: 1.2rem; font-weight: bold; cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            margin-top: 20px;
-            -webkit-tap-highlight-color: transparent;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin-top: 20px;
         }
         button.btn-submit:active { transform: scale(0.98); }
+        button.btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
 
         .checkbox-group {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
             gap: 8px; background: white; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px;
         }
-        .checkbox-group label {
-            display: flex; align-items: center; gap: 6px; margin: 0; cursor: pointer;
-        }
+        .checkbox-group label { display: flex; align-items: center; gap: 6px; margin: 0; cursor: pointer; }
 
         .cert-requirement-tag {
             display: inline-flex; align-items: center;
@@ -157,40 +118,24 @@
             padding: 5px 12px; border-radius: 4px; font-size: 0.85rem;
             margin-right: 8px; margin-bottom: 8px; font-weight: bold;
         }
-        .must-label {
-            background: #c53030; color: white; padding: 1px 5px; border-radius: 3px;
-            font-size: 0.75rem; margin-right: 6px;
-        }
+        .must-label { background: #c53030; color: white; padding: 1px 5px; border-radius: 3px; font-size: 0.75rem; margin-right: 6px; }
         .req-high { background: #fed7d7; color: #c53030; border-color: #feb2b2; }
-        .req-mid { background: #bee3f8; color: #2b6cb0; border-color: #90cdf4; }
 
-        /* 結果顯示頁面樣式 */
         #resultView { display: none; }
         .big-warning {
             background: #fff5f5; border: 3px solid #f56565; color: #c53030;
             padding: 20px; border-radius: 12px; margin-bottom: 25px;
             font-weight: bold; line-height: 1.8; font-size: 1.1rem;
         }
-        .summary-table {
-            width: 100%; border-collapse: collapse; margin-top: 15px;
-        }
-        .summary-table th, .summary-table td {
-            padding: 12px; border-bottom: 1px solid #edf2f7; text-align: left;
-            vertical-align: top;
-        }
-        .summary-table th { background: #f8fafc; color: #64748b; width: 150px; font-size: 0.9rem; }
-        .summary-table td { color: #1e293b; font-weight: 500; font-size: 0.95rem; line-height: 1.6; }
+        .summary-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .summary-table th, .summary-table td { padding: 12px; border-bottom: 1px solid #edf2f7; text-align: left; vertical-align: top; }
+        .summary-table th { background: #f8fafc; color: #64748b; width: 160px; font-size: 0.9rem; }
+        .summary-table td { color: #1e293b; font-weight: 500; font-size: 0.95rem; line-height: 1.8; white-space: pre-wrap; }
         
-        .contact-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;
-        }
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
         @media (max-width: 768px) { .contact-grid { grid-template-columns: 1fr; } }
         
-        .contact-card {
-            padding: 15px; background: #f0f7ff; border-radius: 10px;
-            border-left: 5px solid var(--info-blue);
-        }
-        .contact-item { margin-bottom: 8px; font-size: 0.9rem; }
+        .contact-card { padding: 15px; background: #f0f7ff; border-radius: 10px; border-left: 5px solid var(--info-blue); }
         .contact-title { font-weight: bold; color: var(--secondary-ink); margin-bottom: 8px; display: block; border-bottom: 1px solid #bee3f8; padding-bottom: 4px; }
         
         .save-tip {
@@ -202,11 +147,8 @@
 <body>
 
 <div class="canvas-container">
-    <!-- 表單填寫視窗 -->
     <div id="formView">
-        <header>
-            <h1>臺大醫院代訓申請檢核系統</h1>
-        </header>
+        <header><h1>臺大醫院代訓申請檢核系統</h1></header>
 
         <div class="section-card">
             <h2>1. 受訓人員基本資料</h2>
@@ -274,12 +216,20 @@
                     <label>代訓結束日</label>
                     <input type="date" id="endDate" onchange="updateView()">
                 </div>
-                <div id="partTimeBox">
-                    <label>訓練頻率 (每週來院天數)</label>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <input type="number" id="daysPerWeek" min="1" max="7" style="width: 100px;" placeholder="1-7">
-                        <span>天 / 週</span>
-                    </div>
+                <div id="frequencyWrapper" style="display: none;">
+                    <label>訓練頻率</label>
+                    <select id="frequencyType" onchange="updateView()">
+                        <option value="每天">每天 (全時訓練)</option>
+                        <option value="非全時">非全時 (部分時間)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="partTimeBox" style="margin-top: 15px; display: none;">
+                <label>每週來院天數 (備註)</label>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <input type="number" id="daysPerWeek" min="1" max="7" value="5" style="width: 100px;">
+                    <span>天 / 週</span>
                 </div>
             </div>
 
@@ -319,19 +269,15 @@
                     <div><ul id="fileGroupA" class="file-list"></ul></div>
                     <div><ul id="fileGroupB" class="file-list"></ul></div>
                 </div>
-                <div id="globalFileAlert" class="alert-box" style="display: none;">❌ 您有尚未勾選確認的應備文件。</div>
+                <div id="globalFileAlert" class="alert-box">❌ 您有尚未勾選確認的應備文件。</div>
             </div>
         </div>
 
         <button class="btn-submit" id="submitBtn" onclick="finalCheck()">送出檢核結果</button>
     </div>
 
-    <!-- 結果顯示視窗 (優化後) -->
     <div id="resultView">
-        <header>
-            <h1 style="color: var(--success-green); border-bottom-color: var(--success-green);">✅ 檢核通過狀況明細</h1>
-        </header>
-
+        <header><h1 style="color: var(--success-green); border-bottom-color: var(--success-green);">✅ 檢核通過狀況明細</h1></header>
         <div class="big-warning">
             ⚠️ 併大警示：<br>
             須至遲應於起訓前 1 個月以上，由原屬機構備妥公文並附上所有應備文件電子檔來函，方與受理。
@@ -352,40 +298,31 @@
 
         <div class="contact-grid">
             <div class="contact-card">
-                <strong class="contact-title">教學部 代訓申請聯絡窗口</strong>
-                <div class="contact-item">‧ 長期代訓 (6個月以上)：分機 262112</div>
-                <div class="contact-item">‧ 短期代訓 (未滿6個月)：分機 265634</div>
+                <strong class="contact-title">教學部 窗口</strong>
+                <div class="contact-item">‧ 長期(>6月)：262112 / 短期(<6月)：265634</div>
             </div>
-            
             <div class="contact-card" style="border-left-color: #64748b;">
-                <strong class="contact-title">其他醫事/行政單位聯絡分機</strong>
-                <div class="contact-item">‧ 護理部：265930 / 藥劑部：262334</div>
-                <div class="contact-item">‧ 醫檢部：262531 / 影醫部：262432</div>
-                <div class="contact-item">‧ 復健部：262635 / 營養部：265538</div>
+                <strong class="contact-title">相關單位聯絡</strong>
+                <div class="contact-item">‧ 護理部：265930 / 藥劑部：262334 / 醫檢部：262531</div>
             </div>
         </div>
-        
-        <div class="save-tip">
-            📸 以上為您的檢核紀錄，<strong>請對此頁面進行截圖或列印存檔</strong>，並隨同申請文件送件。
-        </div>
-
+        <div class="save-tip">📸 請對此頁面進行截圖或存檔，並隨同申請文件送件。</div>
         <button class="btn-submit" onclick="location.reload()" style="background: var(--text-gray); margin-top: 25px;">重新填寫</button>
     </div>
 </div>
 
 <script>
     const fileData = [
-        { id: "f1", title: "進修申請表", desc: "(住院醫師須註記級別與完整經歷)", roles: ["ALL"] },
-        { id: "f2", title: "執業執照", desc: "(含查證資料，且執業起訖日期須清晰)", roles: ["ALL"], resSuffix: " 且已查證" },
-        { id: "f3", title: "醫師/醫事人員證書", desc: "(含查證資料，且核發日期須清晰)", roles: ["ALL"], resSuffix: " 且已查證" },
-        { id: "f4", title: "畢業證書", desc: "(含查證資料，若國外學歷須符合認可國家)", roles: ["ALL"], resSuffix: " 且已查證" },
-        { id: "f5", title: "管制藥品執照", desc: "", roles: ["主治醫師", "住院醫師"] },
-        { id: "f6", title: "效期內合格之急救證書", desc: "(需涵蓋代訓訓練全期)", roles: ["ALL"] },
-        { id: "f7", title: "近期考核成績", desc: "(無考核成績須於公文中說明原因)", roles: ["ALL"] },
-        { id: "f8", title: "聯合訓練計畫", desc: "(依本院聯合訓練計畫範本撰寫)", roles: ["住院醫師", "護理人員", "其他醫事人員"], special: "PLAN" },
-        { id: "f9", title: "原屬單位住院醫師訓練計畫", desc: "", roles: ["住院醫師"] },
-        { id: "f10", title: "在職教育訓練紀錄", desc: "(近1年紀錄，衛福部積分明細亦可)", roles: ["ALL"] },
-        { id: "f11", title: "醫培/教補計畫證明", desc: "(截圖衛福部系統，含補助期限及核定受訓次數)", roles: ["護理人員", "其他醫事人員"] }
+        { id: "f1", title: "進修申請表", desc: "(醫師須註記職級與完整經歷、護理部代訓須由該部護理長簽章)", roles: ["ALL"] },
+        { id: "f2", title: "執業執照", desc: "(影本需加蓋與正本相符章及查證資料)", roles: ["ALL"], resSuffix: " 且已查證" },
+        { id: "f3", title: "醫師/醫事人員證書", desc: "(影本需加蓋與正本相符章及查證資料)", roles: ["ALL"], resSuffix: " 且已查證" },
+        { id: "f4", title: "畢業證書", desc: "(影本需加蓋與正本相符章及查證資料)", roles: ["ALL"], resSuffix: " 且已查證" },
+        { id: "f5", title: "管制藥品使用執照", desc: "(醫師申請代訓必備)", roles: ["主治醫師", "住院醫師"] },
+        { id: "f6", title: "效期內合格之急救證書", desc: "(依單位要求如 ACLS/PALS/BLS，需涵蓋受訓全期)", roles: ["ALL"] },
+        { id: "f7", title: "近期考核成績", desc: "(原屬機構最近一年之考核證明)", roles: ["ALL"] },
+        { id: "f8", title: "聯合訓練計畫", desc: "(依本院範本撰寫，需雙方主管簽章)", roles: ["住院醫師", "護理人員", "其他醫事人員"], special: "PLAN" },
+        { id: "f9", title: "在職教育訓練紀錄", desc: "(最近一年內之相關繼續教育紀錄)", roles: ["ALL"] },
+        { id: "f10", title: "醫培/教補計畫證明", desc: "(如為政府或學會相關補助計畫代訓者需附)", roles: ["護理人員", "其他醫事人員"] }
     ];
 
     function updateView() {
@@ -399,15 +336,18 @@
         const nursingConfirm = document.getElementById('nursingConfirmBox');
         if (role === "護理人員") {
             nursingSection.style.display = 'block';
-            const nursingDept = document.getElementById('nursingDeptSelect').value;
-            nursingConfirm.style.display = (nursingDept === "護理部") ? 'block' : 'none';
+            nursingConfirm.style.display = (document.getElementById('nursingDeptSelect').value === "護理部") ? 'block' : 'none';
         } else {
             nursingSection.style.display = 'none';
-            nursingConfirm.style.display = 'none';
         }
 
-        const isPartTimeShort = type.includes("短期");
-        document.getElementById('partTimeBox').style.display = isPartTimeShort ? 'block' : 'none';
+        const freqWrapper = document.getElementById('frequencyWrapper');
+        const isShortUnder6 = (type === '短期：未滿6個月');
+        freqWrapper.style.display = isShortUnder6 ? 'none' : 'block';
+
+        const freqType = document.getElementById('frequencyType').value;
+        const partTimeBox = document.getElementById('partTimeBox');
+        partTimeBox.style.display = (!isShortUnder6 && freqType === '非全時') ? 'block' : 'none';
 
         checkTrainingDuration(type, startVal, endVal);
         renderCertRequirements(role, deptType);
@@ -423,32 +363,25 @@
         const startDate = new Date(startVal);
         const endDate = new Date(endVal);
         const diffDays = Math.ceil((endDate - startDate) / (1000*60*60*24)) + 1;
-        const startMonth = startDate.getMonth() + 1;
         const leadTimeDays = Math.ceil((startDate - new Date()) / (1000*60*60*24));
 
         let errors = [];
         if (diffDays <= 0) errors.push("❌ 結束日期必須晚於開始日期。");
-        if (type.includes("長期") && startMonth !== 4 && startMonth !== 10) errors.push("⚠️ 長期代訓應於 4 月或 10 月起訓。");
-        if (!type.includes("長期") && leadTimeDays < 30) errors.push("⚠️ 短期代訓至遲應於訓練 1 個月前提出申請。");
+        if (!type.includes("長期") && leadTimeDays < 30) errors.push("⚠️ 短期代訓至遲應於起訓 1 個月前提出申請（含公文送達）。");
 
         if (errors.length > 0) {
             alertBox.innerHTML = errors.join('<br>'); alertBox.style.display = 'block';
-            infoBox.innerHTML = "日期檢核未通過。";
         } else {
-            infoBox.innerHTML = `📅 代訓總天數：${diffDays} 天 (符合規範)`;
+            infoBox.innerHTML = `📅 代訓總天數：約 ${diffDays} 天`;
         }
     }
 
     function renderCertRequirements(role, dept) {
         const display = document.getElementById('certRequirementDisplay');
-        const isEmergency = (dept === '急重症加護' || dept === '麻醉急診');
-        const isPeds = (dept.includes('小兒') || dept.includes('嬰兒'));
         const must = '<span class="must-label">至少必備</span>';
-
-        if (isPeds) display.innerHTML = `<span class="cert-requirement-tag req-high">${must} PALS / NRP</span>`;
-        else if (isEmergency) display.innerHTML = `<span class="cert-requirement-tag req-high">${must} ACLS</span>`;
-        else if (role.includes('醫師') || dept === '手術室') display.innerHTML = `<span class="cert-requirement-tag req-mid">${must} ALS</span>`;
-        else display.innerHTML = `<span class="cert-requirement-tag">${must} BLS</span>`;
+        if (dept.includes('小兒') || dept.includes('嬰兒')) display.innerHTML = `<span class="cert-requirement-tag req-high">${must} PALS 或 NRP</span>`;
+        else if (dept === '急重症加護' || dept === '麻醉急診') display.innerHTML = `<span class="cert-requirement-tag req-high">${must} ACLS</span>`;
+        else display.innerHTML = `<span class="cert-requirement-tag">${must} BLS (有效期限內)</span>`;
     }
 
     function updateRequiredFiles(role) {
@@ -456,33 +389,29 @@
         const groupB = document.getElementById('fileGroupB');
         const filtered = fileData.filter(f => f.roles.includes("ALL") || (f.roles.includes("醫師") && role.includes("醫師")) || f.roles.includes(role));
         const mid = Math.ceil(filtered.length / 2);
+        const isNursingDept = (role === "護理人員" && document.getElementById('nursingDeptSelect').value === "護理部");
         
-        const nursingDept = document.getElementById('nursingDeptSelect').value;
-        const isNursingDept = (role === "護理人員" && nursingDept === "護理部");
-        const currentLink = (role === "護理人員") ? "https://www.ntuh.gov.tw/ckfinder_file/EDU-education/files/01_%E8%87%BA%E5%A4%A7%E9%86%AB%E9%99%A2%20%E8%AD%B7%E7%90%86%E4%BA%BA%E5%93%A1%E8%81%AF%E5%90%88%E8%A8%93%E7%B7%B4%E8%A8%88%E7%95%AB(7).pdf" : "https://www.ntuh.gov.tw/ckfinder_file/EDU-education/files/%E5%A4%96%E9%99%A2%E9%80%81%E8%A8%93%E4%BD%8F%E9%99%A2%E9%86%AB%E5%B8%AB%E8%81%AF%E5%90%88%E8%A8%93%E7%B7%B4%E8%A8%88%E7%95%AB-%E6%92%B0%E5%AF%AB%E8%AA%AA%E6%98%8E%E5%8F%8A%E7%AF%84%E6%9C%AC.odt";
-
-        const renderItem = (f, i) => `
-            <li class="file-item" onclick="toggleCheck(this)">
+        const renderItem = (f) => `
+            <li class="file-item" onclick="this.querySelector('input').click()">
                 <input type="checkbox" class="file-check" onclick="event.stopPropagation(); validateFiles();">
                 <div class="file-content">
-                    <div class="file-title" data-suffix="${f.resSuffix || ''}">${i+1}. ${f.title}</div>
+                    <div class="file-title" data-suffix="${f.resSuffix || ''}">${f.title}</div>
                     <div class="file-desc">${f.desc}</div>
-                    ${f.special === 'PLAN' ? `<div class="file-desc"><a href="${currentLink}" target="_blank" style="color:var(--secondary-ink);font-weight:bold;">[下載撰寫範本]</a>${isNursingDept ? '<br><span style="color:red">⚠️護理部代訓需使用專用範本</span>' : ''}</div>` : ''}
-                    <div class="file-warning">⚠️ 尚未勾選</div>
+                    ${f.special === 'PLAN' && isNursingDept ? '<div class="file-desc" style="color:var(--warning-red);font-weight:bold;">⚠️ 護理部代訓需使用「護理部護理人員聯合訓練計畫」格式撰寫。</div>' : ''}
+                    <div class="file-warning">⚠️ 尚未勾選確認</div>
                 </div>
             </li>`;
 
-        groupA.innerHTML = filtered.slice(0, mid).map((f, i) => renderItem(f, i)).join('');
-        groupB.innerHTML = filtered.slice(mid).map((f, i) => renderItem(f, i+mid)).join('');
+        groupA.innerHTML = filtered.slice(0, mid).map(f => renderItem(f)).join('');
+        groupB.innerHTML = filtered.slice(mid).map(f => renderItem(f)).join('');
     }
 
-    function toggleCheck(el) { el.querySelector('.file-check').click(); }
-    
     function validateFiles() {
-        const items = document.querySelectorAll('.file-item');
+        const checks = document.querySelectorAll('.file-check');
         let allOk = true;
-        items.forEach(item => {
-            const checked = item.querySelector('.file-check').checked;
+        checks.forEach(cb => {
+            const item = cb.closest('.file-item');
+            const checked = cb.checked;
             item.classList.toggle('error-border', !checked);
             item.querySelector('.file-warning').style.display = checked ? 'none' : 'block';
             if(!checked) allOk = false;
@@ -490,8 +419,11 @@
         
         const role = document.getElementById('roleSelect').value;
         const nursingDept = document.getElementById('nursingDeptSelect').value;
-        if (role === "護理人員" && nursingDept === "護理部" && !document.getElementById('nursingContactConfirmed').checked) allOk = false;
-        
+        if (role === "護理人員" && nursingDept === "護理部") {
+            const contactConfirmed = document.getElementById('nursingContactConfirmed').checked;
+            if (!contactConfirmed) allOk = false;
+        }
+
         document.getElementById('globalFileAlert').style.display = allOk ? 'none' : 'block';
         return allOk;
     }
@@ -501,42 +433,60 @@
         const exp = document.getElementById('certExpiry').value;
         const alert = document.getElementById('certAlert');
         if (end && exp && new Date(exp) <= new Date(end)) {
-            alert.innerHTML = "⚠️ 警告：證書效期必須大於訓練結束日。"; alert.style.display = 'block';
+            alert.innerText = "⚠️ 警告：急救證書效期必須大於訓練結束日。"; alert.style.display = 'block';
         } else alert.style.display = 'none';
     }
 
     async function finalCheck() {
-        if (!validateFiles() || document.getElementById('durationAlert').style.display === 'block' || document.getElementById('certAlert').style.display === 'block') {
-            alert("請修正所有紅字錯誤並完成應備文件勾選。"); return;
-        }
-
+        if (!validateFiles()) { alert("請勾選所有應備文件清單，並確認已完成相關聯繫。"); return; }
         const certs = Array.from(document.querySelectorAll('input[name="certType"]:checked')).map(c => c.value);
-        if (certs.length === 0) { alert('請勾選持有證書。'); return; }
+        if (certs.length === 0) { alert('請至少勾選一項持有的有效急救證書。'); return; }
 
         const submitBtn = document.getElementById('submitBtn');
-        submitBtn.disabled = true; submitBtn.innerText = "傳送中...";
+        submitBtn.disabled = true; submitBtn.innerText = "正在傳送檢核紀錄...";
 
         const role = document.getElementById('roleSelect').value;
-        const nursingDept = document.getElementById('nursingDeptSelect').value;
-        const days = document.getElementById('daysPerWeek').value;
-        
+        const deptValue = (role === "護理人員") ? `${document.getElementById('nursingDeptSelect').value} / ${document.getElementById('deptType').value}` : document.getElementById('deptType').value;
+        const type = document.getElementById('trainingType').value;
+        const freqType = (type === '短期：未滿6個月') ? '每天' : document.getElementById('frequencyType').value;
+        const days = (freqType === '每天') ? 5 : document.getElementById('daysPerWeek').value;
+        const finalFreq = (freqType === '每天') ? "全時-每天" : `${days} 天/週`;
+
+        const checkedFilesText = Array.from(document.querySelectorAll('.file-check:checked')).map((cb, index) => {
+            const titleEl = cb.closest('.file-item').querySelector('.file-title');
+            let text = titleEl.innerText;
+            const suffix = titleEl.getAttribute('data-suffix') || '';
+            if (text.includes("聯合訓練計畫") && deptValue.includes("護理部")) text += " (需護理部格式)";
+            return `${index + 1}. ${text}${suffix}`;
+        }).join('\n');
+
         const formData = {
             role: role,
-            dept: (role === "護理人員") ? `護理人員(${nursingDept}) / ${document.getElementById('deptType').value}` : document.getElementById('deptType').value,
-            type: document.getElementById('trainingType').value,
+            dept: deptValue,
+            type: type,
             startDate: document.getElementById('startDate').value,
             endDate: document.getElementById('endDate').value,
-            days: days,
+            freq: finalFreq,
             certs: certs.join(', '),
-            expiry: document.getElementById('certExpiry').value
+            expiry: document.getElementById('certExpiry').value,
+            resFiles: checkedFilesText
         };
 
-        const scriptURL = "https://script.google.com/macros/s/AKfycbzCdCRF75Ewim61eJNo7pXyZTxsMIoFDbbTmwxBoQAofKxFSeS2QWr4fOAk7EnxfCK87g/exec";
+        // 已更新為您最新的 Apps Script 網址
+        const scriptURL = "https://script.google.com/macros/s/AKfycbze5ulQWOn4i_SW0IiazF1Wvfn38ZyRsihG5_zCqhTNmEF4lEC_uI-MNCe0nXf_RHk3kw/exec";
+
         try {
-            await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(formData) });
+            await fetch(scriptURL, { 
+                method: 'POST', 
+                mode: 'no-cors', 
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData) 
+            });
             showResult(formData);
         } catch (e) {
-            alert('傳輸異常，請截圖本頁存檔。'); showResult(formData);
+            console.error(e);
+            alert("傳送發生錯誤，但仍會顯示檢核結果供您截圖備份。");
+            showResult(formData);
         } finally {
             submitBtn.disabled = false; submitBtn.innerText = "送出檢核結果";
         }
@@ -545,35 +495,17 @@
     function showResult(data) {
         document.getElementById('formView').style.display = 'none';
         document.getElementById('resultView').style.display = 'block';
-        
         document.getElementById('resRole').innerText = data.role;
         document.getElementById('resType').innerText = data.type;
         document.getElementById('resDept').innerText = data.dept;
         document.getElementById('resDates').innerText = `${data.startDate} 至 ${data.endDate}`;
-        
-        const freqText = (data.days >= 5) ? `${data.days} 天/週 (全時-每天)` : `${data.days} 天/週`;
-        document.getElementById('resFreq').innerText = (data.type.includes("長期")) ? "全時-每天" : freqText;
-        
-        document.getElementById('resCerts').innerText = `${data.certs} (證書效期 ${data.expiry})`;
-        
-        const files = Array.from(document.querySelectorAll('.file-check:checked')).map(cb => {
-            const titleEl = cb.closest('.file-item').querySelector('.file-title');
-            let text = titleEl.innerText.replace(/^\d+\.\s/, ''); // 移除序號
-            const suffix = titleEl.getAttribute('data-suffix') || '';
-            
-            // 護理部聯合計畫特別註記
-            if (text.includes("聯合訓練計畫") && data.dept.includes("護理部")) {
-                text += "(護理部代訓需使用護理部護理人員聯合訓練計畫)";
-            }
-            return text + suffix;
-        });
-        document.getElementById('resFiles').innerText = files.join(', ');
-        
+        document.getElementById('resFreq').innerText = data.freq;
+        document.getElementById('resCerts').innerText = `${data.certs} (效期至 ${data.expiry})`;
+        document.getElementById('resFiles').innerText = data.resFiles;
         window.scrollTo(0,0);
     }
 
     window.onload = updateView;
 </script>
-
 </body>
 </html>
