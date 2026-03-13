@@ -100,6 +100,11 @@
             cursor: pointer;
         }
         
+        .file-item.error-border {
+            border: 2px solid var(--warning-red);
+            background: #fff5f5;
+        }
+
         .file-check {
             width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0;
             cursor: pointer;
@@ -119,6 +124,13 @@
             font-size: 0.8rem;
             color: #718096;
             margin-top: 2px;
+        }
+        .file-warning {
+            color: var(--warning-red);
+            font-size: 0.75rem;
+            margin-top: 4px;
+            font-weight: bold;
+            display: none;
         }
 
         button.btn-submit {
@@ -164,9 +176,16 @@
         }
         .summary-table th, .summary-table td {
             padding: 12px; border-bottom: 1px solid #edf2f7; text-align: left;
+            vertical-align: top;
         }
         .summary-table th { background: #f8fafc; color: #64748b; width: 140px; font-size: 0.9rem; }
-        .summary-table td { color: #1e293b; font-weight: 500; }
+        .summary-table td { color: #1e293b; font-weight: 500; font-size: 0.95rem; }
+        .contact-list {
+            margin-top: 20px; padding: 15px; background: #f0f7ff; border-radius: 10px;
+            border-left: 5px solid var(--info-blue);
+        }
+        .contact-item { margin-bottom: 8px; font-size: 0.9rem; }
+        .contact-title { font-weight: bold; color: var(--secondary-ink); }
         .save-tip {
             text-align: center; color: #718096; font-size: 0.9rem; margin-top: 15px;
             background: #f1f5f9; padding: 10px; border-radius: 8px;
@@ -254,9 +273,6 @@
             <div style="margin-bottom: 25px;">
                 <div class="full-row" style="background: #f8fafc; margin-bottom: 15px; border: 1px solid #e2e8f0;">
                     <label style="color: var(--secondary-ink); margin-bottom: 8px;">急救證書判定：</label>
-                    <div style="font-size: 0.85rem; color: #4a5568; margin-bottom: 10px; line-height: 1.4;">
-                        所需急救證書的判定係依據所選職別與代訓單位屬性。
-                    </div>
                     <div id="certRequirementDisplay"></div>
                 </div>
 
@@ -286,6 +302,7 @@
                     <div><ul id="fileGroupA" class="file-list"></ul></div>
                     <div><ul id="fileGroupB" class="file-list"></ul></div>
                 </div>
+                <div id="globalFileAlert" class="alert-box" style="display: none;">❌ 您有尚未確認勾選的應備文件，請務必確認已備妥所有檔案。</div>
             </div>
         </div>
 
@@ -315,6 +332,24 @@
                 <tr><th>證書效期</th><td id="resCertExpiry"></td></tr>
                 <tr><th>已確認備妥文件</th><td id="resFiles"></td></tr>
             </table>
+        </div>
+
+        <div class="section-card">
+            <h2>聯絡資訊</h2>
+            <div class="contact-list">
+                <div class="contact-title">教學部 代訓申請聯絡窗口：</div>
+                <div class="contact-item">‧ 長期代訓 (6個月以上)：(02) 2312-3456 分機 262112</div>
+                <div class="contact-item">‧ 短期代訓 (未滿6個月)：(02) 2312-3456 分機 265634</div>
+            </div>
+            
+            <div class="contact-list" style="background: #f8fafc; border-left-color: #64748b; margin-top: 15px;">
+                <div class="contact-title">其他訓練單位聯絡電話：</div>
+                <div class="contact-item">‧ 護理部：(02) 2312-3456 分機 265930</div>
+                <div class="contact-item">‧ 藥劑部：(02) 2312-3456 分機 262334</div>
+                <div class="contact-item">‧ 醫事檢驗部：(02) 2312-3456 分機 262531</div>
+                <div class="contact-item">‧ 影像醫學部：(02) 2312-3456 分機 262432</div>
+                <div class="contact-item">‧ 復健部：(02) 2312-3456 分機 262635</div>
+            </div>
             
             <div class="save-tip">
                 📸 以上為您的檢核紀錄，<strong>建議對此頁面進行截圖或列印存檔</strong>。
@@ -326,19 +361,19 @@
 </div>
 
 <script>
-    // 原始文件資料，文字已修正
+    // 原始文件資料
     const fileData = [
-        { title: "進修申請表", desc: "(住院醫師須註記級別與完整經歷)", roles: ["ALL"] },
-        { title: "執業執照", desc: "(含查證資料，且執業起訖日期須清晰)", roles: ["ALL"] },
-        { title: "醫師/醫事人員證書", desc: "(含查證資料，且核發日期須清晰)", roles: ["ALL"] },
-        { title: "畢業證書", desc: "(含查證資料，若國外學歷須符合認可國家)", roles: ["ALL"] },
-        { title: "管制藥品執照", desc: "", roles: ["醫師", "主治醫師", "住院醫師"] },
-        { title: "效期內合格之急救證書", desc: "(需涵蓋代訓訓練全期)", roles: ["ALL"] },
-        { title: "近期考核成績", desc: "(無考核成績須於公文中說明原因)", roles: ["ALL"] },
-        { title: "聯合訓練計畫", desc: "(依本院格式撰寫)", roles: ["住院醫師", "護理人員", "其他醫事人員"] },
-        { title: "申請人原屬單位之住院醫師訓練計畫", desc: "", roles: ["住院醫師"] },
-        { title: "在職教育訓練紀錄", desc: "(近1年紀錄，衛福部積分明細亦可)", roles: ["ALL"] },
-        { title: "醫培/教補計畫證明", desc: "(截圖衛福部系統，含補助期限及核定受訓次數)", roles: ["護理人員", "其他醫事人員"] }
+        { id: "f1", title: "進修申請表", desc: "(住院醫師須註記級別與完整經歷)", roles: ["ALL"] },
+        { id: "f2", title: "執業執照", desc: "(含查證資料，且執業起訖日期須清晰)", roles: ["ALL"] },
+        { id: "f3", title: "醫師/醫事人員證書", desc: "(含查證資料，且核發日期須清晰)", roles: ["ALL"] },
+        { id: "f4", title: "畢業證書", desc: "(含查證資料，若國外學歷須符合認可國家)", roles: ["ALL"] },
+        { id: "f5", title: "管制藥品執照", desc: "", roles: ["醫師", "主治醫師", "住院醫師"] },
+        { id: "f6", title: "效期內合格之急救證書", desc: "(需涵蓋代訓訓練全期)", roles: ["ALL"] },
+        { id: "f7", title: "近期考核成績", desc: "(無考核成績須於公文中說明原因)", roles: ["ALL"] },
+        { id: "f8", title: "聯合訓練計畫", desc: "(依本院格式撰寫)", roles: ["住院醫師", "護理人員", "其他醫事人員"], special: "PLAN" },
+        { id: "f9", title: "申請人原屬單位之住院醫師訓練計畫", desc: "", roles: ["住院醫師"] },
+        { id: "f10", title: "在職教育訓練紀錄", desc: "(近1年紀錄，衛福部積分明細亦可)", roles: ["ALL"] },
+        { id: "f11", title: "醫培/教補計畫證明", desc: "(截圖衛福部系統，含補助期限及核定受訓次數)", roles: ["護理人員", "其他醫事人員"] }
     ];
 
     function updateView() {
@@ -398,7 +433,6 @@
         let reqs = [];
         const isEmergency = (dept === '急重症加護' || dept === '麻醉急診');
         const isPeds = (dept.includes('小兒') || dept.includes('嬰兒'));
-        
         const mustPrefix = '<span class="must-label">「至少必備」</span>';
 
         if (isPeds) {
@@ -413,37 +447,67 @@
         display.innerHTML = reqs.join('');
     }
 
-    /**
-     * 更新文件清單，序號動態生成
-     */
     function updateRequiredFiles(role) {
         const groupA = document.getElementById('fileGroupA');
         const groupB = document.getElementById('fileGroupB');
         
-        // 1. 過濾出該職別所需文件
         const filteredFiles = fileData.filter(f => 
             f.roles.includes("ALL") || 
             (f.roles.includes("醫師") && role.includes("醫師")) || 
             f.roles.includes(role)
         );
         
-        // 2. 計算總數並平分到兩個欄位
         const halfCount = Math.ceil(filteredFiles.length / 2);
-        
-        const createFileHtml = (f, index) => `
-            <li class="file-item" onclick="toggleCheck(this)">
-                <input type="checkbox" class="file-check" onclick="event.stopPropagation()">
+        const downloadLink = role === "護理人員" 
+            ? '<a href="#" style="color:blue;text-decoration:underline;">[點此下載護理人員格式]</a>' 
+            : '<a href="#" style="color:blue;text-decoration:underline;">[點此下載醫事人員格式]</a>';
+
+        const createFileHtml = (f, index) => {
+            const isPlan = f.special === "PLAN";
+            return `
+            <li class="file-item" data-id="${f.id}" onclick="toggleCheck(this)">
+                <input type="checkbox" class="file-check" onclick="event.stopPropagation(); validateFiles();">
                 <div class="file-content">
                     <div class="file-title">${index + 1}. ${f.title}</div>
                     ${f.desc ? `<div class="file-desc">${f.desc}</div>` : ''}
+                    ${isPlan ? `<div class="file-desc" style="color:#2a5298;">請使用本院網站擬薦送人員應備文件之格式 ${downloadLink}</div>` : ''}
+                    <div class="file-warning">⚠️ 此文件尚未勾選確認</div>
                 </div>
             </li>`;
+        };
         
         groupA.innerHTML = filteredFiles.slice(0, halfCount).map((f, i) => createFileHtml(f, i)).join('');
         groupB.innerHTML = filteredFiles.slice(halfCount).map((f, i) => createFileHtml(f, i + halfCount)).join('');
+        
+        // 切換身分後重新驗證一次警示狀態
+        validateFiles();
     }
 
-    function toggleCheck(el) { el.querySelector('.file-check').checked = !el.querySelector('.file-check').checked; }
+    function toggleCheck(el) { 
+        const cb = el.querySelector('.file-check');
+        cb.checked = !cb.checked; 
+        validateFiles();
+    }
+
+    // 實時驗證文件勾選狀況
+    function validateFiles() {
+        let allChecked = true;
+        const items = document.querySelectorAll('.file-item');
+        items.forEach(item => {
+            const isChecked = item.querySelector('.file-check').checked;
+            const warning = item.querySelector('.file-warning');
+            if (!isChecked) {
+                item.classList.add('error-border');
+                warning.style.display = 'block';
+                allChecked = false;
+            } else {
+                item.classList.remove('error-border');
+                warning.style.display = 'none';
+            }
+        });
+        document.getElementById('globalFileAlert').style.display = allChecked ? 'none' : 'block';
+        return allChecked;
+    }
 
     function checkCert() {
         const endVal = document.getElementById('endDate').value;
@@ -458,7 +522,10 @@
     async function finalCheck() {
         const durError = document.getElementById('durationAlert').style.display === 'block';
         const certError = document.getElementById('certAlert').style.display === 'block';
+        const filesOk = validateFiles();
+
         if (durError || certError) { alert("請先修正檢核錯誤項。"); return; }
+        if (!filesOk) { alert("請確認已勾選所有應備文件，並確保使用本院格式。"); return; }
 
         const certs = Array.from(document.querySelectorAll('input[name="certType"]:checked')).map(c => c.value);
         if (certs.length === 0) { alert('請勾選並確認具備符合要求的急救證書。'); return; }
@@ -471,14 +538,10 @@
         }
 
         const submitBtn = document.getElementById('submitBtn');
-        const originalBtnText = submitBtn.innerText;
         submitBtn.disabled = true;
         submitBtn.innerText = "資料傳送中...";
 
-        // 取得日期物件以便提取月份
         const startDateVal = document.getElementById('startDate').value;
-        const startMonth = startDateVal ? new Date(startDateVal).getMonth() + 1 : "";
-
         const formData = {
             timestamp: new Date().toLocaleString(),
             role: document.getElementById('roleSelect').value,
@@ -487,7 +550,6 @@
             startDate: startDateVal,
             endDate: document.getElementById('endDate').value,
             daysPerWeek: daysPerWeek || "全時",
-            startMonth: startMonth,
             certTypes: certs,
             certExpiry: document.getElementById('certExpiry').value
         };
@@ -498,18 +560,15 @@
             await fetch(scriptURL, { 
                 method: 'POST', 
                 mode: 'no-cors', 
-                cache: 'no-cache', 
-                headers: { 'Content-Type': 'application/json' }, 
                 body: JSON.stringify(formData) 
             });
             showResult(formData);
         } catch (error) {
-            console.error('Error!', error.message);
-            alert('資料傳送失敗，請進行截圖存檔。');
+            alert('網路傳輸異常，請截圖本頁面存檔。');
             showResult(formData);
         } finally {
             submitBtn.disabled = false;
-            submitBtn.innerText = originalBtnText;
+            submitBtn.innerText = "送出檢核結果";
         }
     }
 
@@ -528,7 +587,7 @@
         const checkedFiles = Array.from(document.querySelectorAll('.file-check:checked')).map(cb => {
             return cb.closest('.file-item').querySelector('.file-title').innerText;
         });
-        document.getElementById('resFiles').innerText = checkedFiles.length > 0 ? checkedFiles.join('、') : '未勾選（請務必依規定備齊）';
+        document.getElementById('resFiles').innerText = checkedFiles.join('、');
         
         window.scrollTo(0, 0);
     }
